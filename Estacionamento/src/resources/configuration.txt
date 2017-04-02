@@ -1,0 +1,5 @@
+urlConexao=jdbc:mysql://localhost:3306/estacionamento
+usuarioBanco=root
+senhaBanco=root
+selectOcupadas=select ocupadas from tb_status_vagas where id=1
+selectSituacaoAtual=select sum(valor) from tb_movimentacao where data_saida >= curdate() and data_saida < date_add(curdate(),INTERVAL 1 DAY) group by curdate()
