@@ -58,6 +58,8 @@ public class StatusEstacionamentoCliente extends JFrame {
 
 		JButton btnAtualizar = new JButton("Atualizar Status");
 		btnAtualizar.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		// ****** AS ALTERAÇÕES DO CÓDIGO ORIGINAL ACONTECERAM NESTE LISTENER DO BOTÃO ****** //
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -125,6 +127,9 @@ public class StatusEstacionamentoCliente extends JFrame {
 		this.lblFaturamento.setText(Double.toString(bean.getFaturamentoDia()));
 	}
 
+	/**
+	 * Este método irá ler o WSDL e retornar um objeto que possui os métodos deste. 
+	 */
 	protected StatusEstacionamentoService carregarServico() throws MalformedURLException {
 
 		StatusEstacionamentoService service = null;
