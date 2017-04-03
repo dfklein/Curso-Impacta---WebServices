@@ -15,7 +15,7 @@ public class StatusEstacionamentoServiceImpl implements StatusEstacionamentoServ
 	}
 	
 	public static void main(String[] args) {
-		
+		System.out.println("Serviço iniciado");
 		// o segundo argumento é uma implementação do serviço. Isto é o que devolve o WSDL, com as definições do seu serviço.
 		Endpoint.publish("http://127.0.0.1:8888/status?WSDL", new StatusEstacionamentoServiceImpl());
 	}
