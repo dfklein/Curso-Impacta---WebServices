@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,7 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
+import impacta.ead.jp.estacionamento.integracao.StatusBean;
 import impacta.ead.jp.estacionamento.integracao.StatusEstacionamentoService;
 
 public class StatusEstacionamentoCliente extends JFrame {
@@ -56,8 +60,16 @@ public class StatusEstacionamentoCliente extends JFrame {
 		btnAtualizar.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					statusService = carregarServico();
+				} catch (MalformedURLException e1) {
+					e1.printStackTrace();
+				}
+				StatusBean bean = statusService.getStatus(); // chamada do WebService
+				carregarLabels(bean);
 				// TODO atualizar o status chamando o serviço
 			}
+
 		});
 		panel.add(btnAtualizar, BorderLayout.NORTH);
 
@@ -105,5 +117,31 @@ public class StatusEstacionamentoCliente extends JFrame {
 		lblDisponibilidade.setForeground(Color.BLUE);
 		lblDisponibilidade.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel_5.add(lblDisponibilidade, BorderLayout.CENTER);
+	}
+
+	protected void carregarLabels(StatusBean bean) {
+		this.lblDisponibilidade.setText(Integer.toString(bean.getVagasLivres()));
+		this.lblOcupacao.setText(Integer.toString(bean.getVagasOcupadas()));
+		this.lblFaturamento.setText(Double.toString(bean.getFaturamentoDia()));
+	}
+
+	protected StatusEstacionamentoService carregarServico() throws MalformedURLException {
+
+		StatusEstacionamentoService service = null;
+		
+		// Definir a URL de acesso ao serviço
+		URL url = new URL("http://127.0.0.1:8888/status?WSDL");
+		
+		// Qname (Qualified Name)
+		// No 1o parâmetro você vai passar o nome do pacote onde está seu serviço ao contrário. No caso: impacta.ead.jp.estacionamento.integracao.
+		// Já o segundo é o nome da sua implemntação da interface do servico + "Service" no final
+		QName qname = new QName("http://integracao.estacionamento.jp.ead.impacta/",
+				"StatusEstacionamentoServiceImplService");
+		
+		// Cria um proxy de comunicação com o serviço provedor
+		Service srv = Service.create(url, qname);
+		service = srv.getPort(StatusEstacionamentoService.class); // obtem o proxy
+		
+		return service;
 	}
 }
